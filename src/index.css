@@ -1,0 +1,171 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.auth-form-container{
+  position: absolute; 
+  top: 45%; 
+  left: 26%; 
+  transform: translate(-50%, -50%);
+}
+
+
+.image-container {
+    position: absolute; 
+    top: 50%; 
+    left: 76%; 
+    transform: translate(-50%, -50%);
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+.input-container{
+  display: flex; 
+  flex-direction: column; 
+  width: 300px;
+  margin: 20px; 
+}
+
+.dropdown-container{
+  margin-bottom:1rem; 
+  padding:0px;
+}
+
+.auth-image{
+  height:50vh;
+}
+
+.auth-header{
+  margin-top: 140px; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center;
+}
+
+.blogspot-heading{
+  font-family: Righteous;
+}
+
+.alert {
+  width:280px;
+}
+
+.navbar-link {
+  margin-right: 40px;
+  color:rgb(82, 82, 82);
+}
+
+.navbar-link:hover{
+  color:blue;
+}
+
+.div-img{
+  justify-content: center;
+  align-items: center;
+  display:flex;
+  width:300px;
+  height:280px;
+}
+
+.post-img{
+  object-fit: cover;
+  transition: transform .3s;
+  min-width: 100%;
+  min-height: 100%;
+  margin:0 auto;
+  background-color: rgb(173, 173, 237);
+  border-radius: 8px;
+}
+
+.post-category{
+  font-size: 12px; 
+  margin-top: 20px; 
+  color:rgb(37, 99, 235);
+}
+
+.post-title{
+  font-size:18px;
+  color:black; 
+  margin-top: 5px; 
+  font-weight:600; 
+  line-height:22px;
+  margin-bottom:10px;
+  max-width: 100%;
+}
+
+.post-details{
+  font-size:14px;
+  margin-top: 0px;
+  color:rgb(115, 115, 115);
+  max-width: 100%;
+}
+
+.text-container{
+  width:300px;
+}
+
+.inner-div{
+  display: inline-block;
+  margin: 0 auto;
+  padding: 3px;
+  /* background-color: #8ebf42 */
+}
+.post-img:hover{
+  transform:scale(1.04);
+}
+
+.outer-div {
+  width: 100%;
+  text-align: center;
+  /* background-color: #0666a3 */
+}
+
+.inner-div {
+  display: inline-block;
+  margin: 0 auto;
+  width: 70%;
+  padding: 3px;
+  /* background-color: #8ebf42 */
+  
+}
+
+.sub-text{
+  font-size:18px,;
+  color:rgb(38, 38, 38);
+}
+
+.navbar-outer-div{
+  width: 100vw; 
+  height: 10vh; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 20px; 
+  max-width: 50%;
+  font-family: sans-serif;
+}
+
+.blogspot {
+  font-family: Righteous;
+}
