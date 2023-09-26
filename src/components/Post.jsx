@@ -1,25 +1,60 @@
-import { Link } from 'react-router-dom';
-import '../index.css'
+import { Link } from "react-router-dom";
+import "../index.css";
+import { getAuthor } from "../services/author";
+import { Chip } from "@mui/material";
+import { formatDate } from "../services/dateConversion";
+import "../index.css";
 
-export default function Post() {
+export default function Post({ post, page }) {
+  const Status = () => {
+    if (page !== "profile") {
+      return null;
+    }
+
+    const status = post.status;
+    const colorMap = {
+      Approved: "success",
+      Pending: "warning",
+      Draft: "info",
+      Rejected: "error",
+    };
+
+    const color = colorMap[status];
+
+    return (
+      <Chip
+        variant="outlined"
+        sx={{ textTransform: "capitalize" }}
+        color={color}
+        size="small"
+        label={status}
+      />
+    );
+  };
+
   return (
-    <div style={{display:'flex', justifyContent:'center', alignItems:'center', flexDirection:'column', maxWidth:'350px', padding:'10px', width:'100%'}}>
-         <div className="div-img">
-            <img className='post-img' src='/image.avif'/>
+    <div className="post-view-div">
+      <Link to={`/post/${post.id}/`}>
+        <div className="div-img">
+          <img className="post-img"  src={post.image} />
         </div>
-        <div className='text-container'>
-            <Link>
-                <p className='post-category'>TECHNOLOGY</p>
-            </Link>
-            <Link>
-                <p className='post-title'>Architectural Engineering Wonders of the modern era for your Inspiration</p>
-            </Link>
-            <Link >
-                <p className='post-details'>Mario Sanchez &#8226; October 21, 2022</p>
-            </Link>
-        </div>     
-    </div>
-   
+      </Link>
 
+      <div className="text-container">
+        <Link>
+          <p className="post-category">{post.category}</p>
+
+          <Status />
+        </Link>
+        <Link to={`post/${post.id}`}>
+          <p className="post-title">{post.title}</p>
+        </Link>
+        <Link>
+          <p className="post-details">
+            {getAuthor(post.author)} &#8226; {formatDate(post.created_on)}
+          </p>
+        </Link>
+      </div>
+    </div>
   );
 }
