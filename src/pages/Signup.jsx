@@ -1,46 +1,47 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Stack } from '@mui/material';
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Stack } from "@mui/material";
 import { Button, TextField } from "@mui/material";
-import Dropdown from '../components/Dropdown';
-import CustomAlert from '../components/CustomAlert';
-import { useRegisterUserMutation } from '../services/userAuthApi';
-import '../index.css';
+import Dropdown from "../components/Dropdown";
+import CustomToast from "../components/CustomToast";
+import { useRegisterUserMutation } from "../services/userAuthApi";
+import "../index.css";
 
-const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity }) => {
+const Signup = ({ client }) => {
   const [organisationChoices, setOrganisationChoices] = useState([]);
-  const [organisation, setOrganisation] = useState('Organisation');
-  const [showSignupAlert, setShowSignupAlert] = useState(false);
+  const [organisation, setOrganisation] = useState("Organisation");
   const [registerUser] = useRegisterUserMutation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
 
   const [formValues, setFormValues] = useState({
     first_name: {
-      value: '',
+      value: "",
       error: false,
-      errorMessage: 'You must enter your first name'
+      errorMessage: "You must enter your first name",
     },
     last_name: {
-      value: '',
+      value: "",
       error: false,
-      errorMessage: 'You must enter your last name'
+      errorMessage: "You must enter your last name",
     },
     email: {
-      value: '',
+      value: "",
       error: false,
-      errorMessage: 'You must enter an email'
+      errorMessage: "You must enter an email",
     },
     username: {
-      value: '',
+      value: "",
       error: false,
-      errorMessage: 'You must enter a username'
+      errorMessage: "You must enter a username",
     },
     password: {
-      value: '',
+      value: "",
       error: false,
-      errorMessage: 'You must enter a password.'
-    }
+      errorMessage: "You must enter a password.",
+    },
   });
 
   const handleChange = (e) => {
@@ -49,8 +50,8 @@ const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity 
       ...formValues,
       [name]: {
         ...formValues[name],
-        value
-      }
+        value,
+      },
     });
   };
 
@@ -64,13 +65,13 @@ const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity 
       const currentField = formFields[index];
       const currentValue = formValues[currentField].value;
 
-      if (currentValue === '') {
+      if (currentValue === "") {
         newFormValues = {
           ...newFormValues,
           [currentField]: {
             ...newFormValues[currentField],
-            error: true
-          }
+            error: true,
+          },
         };
       }
     }
@@ -82,45 +83,56 @@ const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity 
       email: formValues.email.value,
       organisation: organisation,
       username: formValues.username.value,
-      password: formValues.password.value
+      password: formValues.password.value,
     };
-    const res = await registerUser(data);
-    if (res.error) {
-      setAlert(res.error.data);
-      setShowSignupAlert(true);
-      setOpen(true);
-      setSeverity('error');
+
+    if (
+      !data.first_name ||
+      !data.last_name ||
+      !data.username ||
+      !data.email ||
+      !data.password ||
+      !data.organisation
+    ) {
+      return;
     }
-    if (res.data){
-      navigate('/sign-in')
+
+    const res = await registerUser(data);
+    console.log(res);
+    if (res.error) {
+      setMessage(res.error.data);
+      setSeverity("error");
+    }
+
+    if (res.data) {
+      setMessage("Registered successfully!");
+      setSeverity("success");
+      navigate("/sign-in");
     }
   };
 
   useEffect(() => {
-    client.get('/api/organisations/')
+    client
+      .get("/api/organisations/")
       .then((response) => {
         setOrganisationChoices(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching status choices:', error);
+        console.error("Error fetching status choices:", error);
       });
   }, []);
 
   return (
     <div>
       {/* Currently using form, will update it with Formik soon. */}
-      <form
-        method="post"
-        noValidate
-        onSubmit={handleSubmit}
-      >
-        <div className='auth-form-container'>
-          <h2 className='auth-header'>Sign Up</h2>
+      <form method="post" noValidate onSubmit={handleSubmit}>
+        <div className="auth-form-container">
+          <h2 className="auth-header">Sign Up</h2>
 
           <div>
-            {showSignupAlert && <CustomAlert message={alert} open={open} setOpen={setOpen} severity={severity} />}
+            <CustomToast message={message} severity={severity} />
           </div>
-          <div className='input-container' >
+          <div className="input-container">
             <Stack>
               <TextField
                 placeholder="First name"
@@ -131,9 +143,12 @@ const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity 
                 value={formValues.first_name.value}
                 onChange={handleChange}
                 error={formValues.first_name.error}
-                helperText={formValues.first_name.error && formValues.first_name.errorMessage}
-                sx={{ marginBottom: '1rem' }}
-                type='text'
+                helperText={
+                  formValues.first_name.error &&
+                  formValues.first_name.errorMessage
+                }
+                sx={{ marginBottom: "1rem" }}
+                type="text"
               />
 
               <TextField
@@ -145,9 +160,12 @@ const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity 
                 value={formValues.last_name.value}
                 onChange={handleChange}
                 error={formValues.last_name.error}
-                helperText={formValues.last_name.error && formValues.last_name.errorMessage}
-                sx={{ marginBottom: '1rem' }}
-                type='text'
+                helperText={
+                  formValues.last_name.error &&
+                  formValues.last_name.errorMessage
+                }
+                sx={{ marginBottom: "1rem" }}
+                type="text"
               />
 
               <TextField
@@ -160,8 +178,10 @@ const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity 
                 value={formValues.email.value}
                 onChange={handleChange}
                 error={formValues.email.error}
-                helperText={formValues.email.error && formValues.email.errorMessage}
-                sx={{ marginBottom: '1rem' }}
+                helperText={
+                  formValues.email.error && formValues.email.errorMessage
+                }
+                sx={{ marginBottom: "1rem" }}
               />
 
               <TextField
@@ -171,14 +191,16 @@ const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity 
                 variant="outlined"
                 required
                 value={formValues.username.value}
-                type='text'
+                type="text"
                 onChange={handleChange}
                 error={formValues.username.error}
-                helperText={formValues.username.error && formValues.username.errorMessage}
-                sx={{ marginBottom: '1rem' }}
+                helperText={
+                  formValues.username.error && formValues.username.errorMessage
+                }
+                sx={{ marginBottom: "1rem" }}
               />
 
-              <div className='dropdown-container'>
+              <div className="dropdown-container">
                 <Dropdown
                   organisation={organisation}
                   organisationChoices={organisationChoices}
@@ -192,32 +214,36 @@ const Signup = ({ client, alert, setAlert, open, setOpen, severity, setSeverity 
                 variant="outlined"
                 required
                 value={formValues.password.value}
-                type='password'
+                type="password"
                 onChange={handleChange}
                 error={formValues.password.error}
-                helperText={formValues.password.error && formValues.password.errorMessage}
-                sx={{ marginBottom: '1rem' }}
+                helperText={
+                  formValues.password.error && formValues.password.errorMessage
+                }
+                sx={{ marginBottom: "1rem" }}
               />
               <Button
-                sx={{ marginBottom: '1rem' }}
-                type='submit'
-                variant="contained">
+                sx={{ marginBottom: "1rem" }}
+                type="submit"
+                variant="contained"
+              >
                 Sign Up
               </Button>
-              <Link to='/sign-in'>Already a user? Log in.</Link>
+              <Link to="/sign-in">Already a user? Log in.</Link>
             </Stack>
           </div>
         </div>
       </form>
-      <div
-        className='image-container'>
+      <div className="image-container">
         <img
-          className='auth-image'
-          src='https://img.freepik.com/free-vector/copywriting-social-media-post-content-marketing-internet-commercial-cartoon-character-writing-text-advertising-promotional-strategy-concept-illustration_335657-2066.jpg?w=1480&t=st=1694697821~exp=1694698421~hmac=bc5db40e957a45a7a83c5b4972778e1acfb6d8b4ee3ae7b34016d017d8778e63'
-          alt='Login image' />
+          className="auth-image"
+          src="https://img.freepik.com/free-vector/copywriting-social-media-post-content-marketing-internet-commercial-cartoon-character-writing-text-advertising-promotional-strategy-concept-illustration_335657-2066.jpg?w=1480&t=st=1694697821~exp=1694698421~hmac=bc5db40e957a45a7a83c5b4972778e1acfb6d8b4ee3ae7b34016d017d8778e63"
+          alt="Login image"
+        />
       </div>
     </div>
   );
-}
+};
 
 export default Signup;
+
