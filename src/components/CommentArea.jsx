@@ -9,15 +9,12 @@ import { getAuthor } from "../services/author";
 import { formatDate } from "../services/dateConversion";
 import { Divider, Avatar, Grid, Paper } from "@mui/material";
 
-const CommentArea = (props) => {
+const CommentArea = ({data, setComments}) => {
   const { id } = useParams();
   const [text, setText] = useState("");
   const { access_token } = getToken();
   const [createComment] = useCreateCommentMutation();
   const { id: userId } = useSelector((state) => state.user);
-
-  let comments = props.data;
-  const setComments = props.setComments;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,11 +23,14 @@ const CommentArea = (props) => {
       content: text,
       user: userId,
     };
-    const res = await createComment({ comment, access_token });
-    console.log(res);
-    setText("");
-    comments = [...comments, res.data];
-    setComments(comments);
+    
+    try {
+      const res = await createComment({ comment, access_token });
+      setComments((prevComments) => [...prevComments, res.data]);
+      setText("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -56,7 +56,7 @@ const CommentArea = (props) => {
         </Button>
       </form>
       <div className="comment-list">
-        {comments.map((comment) => (
+        {data.map((comment) => (
           <Paper
             sx={{
               paddingRight: "40px",

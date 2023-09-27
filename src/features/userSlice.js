@@ -7,6 +7,7 @@ const initialState = {
   email: "",
   username: "",
   password: "",
+  profile_picture: "",
 };
 
 export const userSlice = createSlice({
@@ -14,28 +15,31 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserInfo: (state, action) => {
-      const { id, first_name, last_name, email, username, password } =
-        action.payload;
-      return {
-        ...state,
+      const {
         id,
         first_name,
         last_name,
         email,
         username,
         password,
-      };
+        profile_picture,
+      } = action.payload;
+      state.id = id;
+      state.first_name = first_name;
+      state.last_name = last_name;
+      state.email = email;
+      state.username = username;
+      state.password = password;
+      state.profile_picture = profile_picture;
     },
     unsetUserInfo: (state) => {
-      return {
-        ...state,
-        id: "",
-        first_name: "",
-        last_name: "",
-        email: "",
-        username: "",
-        password: "",
-      };
+      state.id = "";
+      state.first_name = "";
+      state.last_name = "";
+      state.email = "";
+      state.username = "";
+      state.password = "";
+      state.profile_picture = "";
     },
   },
 });
